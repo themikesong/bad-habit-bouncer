@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Bad Habit Bouncer — Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div id="container">
+    <h1>Bad Habit Bouncer</h1>
+
+    <div class="row">
+      <label for="enabled">Enabled</label>
+      <div class="toggle-wrap">
+        <input type="checkbox" id="enabled">
+        <span id="status-label"></span>
+      </div>
+    </div>
+
+    <div class="row">
+      <label for="probability">Redirect probability</label>
+      <p class="hint">Changes the likelihood that one of the sites in "Distractions" will get redirected to a better choice.</p>
+      <div class="slider-wrap">
+        <input type="range" id="probability" min="0" max="100" step="1">
+        <span id="probability-value"></span>
+      </div>
+    </div>
+
+    <div class="row">
+      <label>Distractions</label>
+      <p class="hint">Sites to monitor. Enter any hostname — subdomains are matched automatically.</p>
+      <ul id="site-list"></ul>
+      <div class="add-wrap">
+        <input type="text" id="new-site" placeholder="reddit.com">
+        <button id="add-site">Add</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <label>Better Choices</label>
+      <p class="hint">When a distraction is blocked, redirect to one of these at random.</p>
+      <ul id="url-list"></ul>
+      <div class="add-wrap">
+        <input type="url" id="new-url" placeholder="https://...">
+        <button id="add-url">Add</button>
+      </div>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

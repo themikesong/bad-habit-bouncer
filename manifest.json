@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Bad Habit Bouncer",
+  "version": "1.0",
+  "description": "Redirect your autopilot browsing to better choices.",
+  "permissions": [
+    "webNavigation",
+    "storage"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  }
+}

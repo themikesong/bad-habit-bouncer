@@ -1,0 +1,123 @@
+body {
+  width: 300px;
+  margin: 0;
+  padding: 12px;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #1a1a1a;
+}
+
+#container.disabled .row:not(:first-child) {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.row {
+  margin-bottom: 12px;
+}
+
+.row:last-child {
+  margin-bottom: 0;
+}
+
+.row > label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.toggle-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#status-label {
+  font-size: 12px;
+  color: #888;
+  font-style: italic;
+}
+
+.slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#probability {
+  flex: 1;
+}
+
+#probability-value {
+  min-width: 36px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#url-list {
+  list-style: none;
+  margin: 0 0 6px;
+  padding: 0;
+}
+
+#url-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 3px 0;
+  border-bottom: 1px solid #eee;
+}
+
+#url-list li:last-child {
+  border-bottom: none;
+}
+
+#url-list span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.remove-btn {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #999;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0 2px;
+}
+
+.remove-btn:hover {
+  color: #c00;
+}
+
+.add-wrap {
+  display: flex;
+  gap: 6px;
+}
+
+.add-wrap input {
+  flex: 1;
+  min-width: 0;
+  padding: 4px 6px;
+  font-size: 13px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.add-wrap button {
+  padding: 4px 10px;
+  font-size: 13px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #f5f5f5;
+  cursor: pointer;
+}
+
+.add-wrap button:hover {
+  background: #e8e8e8;
+}

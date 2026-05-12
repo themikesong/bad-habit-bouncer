@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div id="container">
+    <div class="row">
+      <label for="enabled">Enabled</label>
+      <div class="toggle-wrap">
+        <span id="status-label"></span>
+        <input type="checkbox" id="enabled">
+      </div>
+    </div>
+
+    <div class="row">
+      <label for="probability">Redirect probability</label>
+      <div class="slider-wrap">
+        <input type="range" id="probability" min="0" max="100" step="1">
+        <span id="probability-value"></span>
+      </div>
+    </div>
+
+    <div class="row">
+      <label>Distractions</label>
+      <ul id="site-list"></ul>
+      <div class="add-wrap">
+        <input type="text" id="new-site" placeholder="reddit.com">
+        <button id="add-site">Add</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <label>Better Choices</label>
+      <ul id="url-list"></ul>
+      <div class="add-wrap">
+        <input type="url" id="new-url" placeholder="https://...">
+        <button id="add-url">Add</button>
+      </div>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

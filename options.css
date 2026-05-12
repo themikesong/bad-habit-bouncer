@@ -1,0 +1,138 @@
+body {
+  margin: 0;
+  padding: 40px;
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  color: #1a1a1a;
+  background: #fafafa;
+}
+
+#container {
+  max-width: 480px;
+}
+
+h1 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 24px;
+}
+
+#container.disabled .row:not(:first-child) {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.row {
+  margin-bottom: 20px;
+}
+
+.row > label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.hint {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: #888;
+}
+
+.toggle-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#status-label {
+  font-size: 12px;
+  color: #888;
+  font-style: italic;
+}
+
+.slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#probability {
+  width: 200px;
+}
+
+#probability-value {
+  min-width: 40px;
+  font-variant-numeric: tabular-nums;
+}
+
+#url-list {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background: #fff;
+  overflow: hidden;
+}
+
+#url-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+#url-list li:last-child {
+  border-bottom: none;
+}
+
+#url-list span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.remove-btn {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #aaa;
+  font-size: 18px;
+  line-height: 1;
+  padding: 0 2px;
+}
+
+.remove-btn:hover {
+  color: #c00;
+}
+
+.add-wrap {
+  display: flex;
+  gap: 8px;
+}
+
+.add-wrap input {
+  flex: 1;
+  max-width: 360px;
+  padding: 6px 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.add-wrap button {
+  padding: 6px 14px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #f0f0f0;
+  cursor: pointer;
+}
+
+.add-wrap button:hover {
+  background: #e0e0e0;
+}
