@@ -2,6 +2,14 @@
 
 Redirect your autopilot browsing to better choices. A lightweight Chrome extension that adds friction to mindless site visits.
 
+## Why I Built This
+
+I have a really bad muscle memory habit of opening up Reddit when I'm bored on my computer. I have friends who have similar problems with other sites. 
+
+Every productivity and habit-fixing app I've found blocks access entirely. The problem is, sometimes going to Reddit is necessary. When it's not, it's more about being bored and wanting to see something new vs actually being compelled to browse. 
+
+This Chrome extension treads that middle ground. It gives users flexibility to access the site they want to visit less, but adds a probability of a redirect to a "better" site. All three of these are configurable: the monitored sites, the probability of redirect, and the sites that you get redirected to.
+
 ## Features
 
 - **Configurable redirect probability** — Choose how often redirects happen (0–100%)
@@ -22,10 +30,6 @@ Redirect your autopilot browsing to better choices. A lightweight Chrome extensi
 5. Click **Load unpacked** → select the unzipped folder
 6. The extension is live; reload any open tabs to apply it
 
-### Option 2: From Source (Development)
-
-1. Clone or download this repository
-2. Follow the same steps as above (Developer Mode → Load unpacked)
 
 ## Usage
 
