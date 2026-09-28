@@ -48,6 +48,22 @@ chrome.webNavigation.onBeforeNavigate.addListener(
     const isMonitored = settings.monitoredSites.some(site => matchesSite(hostname, site));
     if (!isMonitored) return;
 
+    // Check if navigation originates from a monitored site
+    // If the user is already on a monitored site and clicks a link, don't bounce
+    try {
+      const tab = await chrome.tabs.get(details.tabId);
+      if (tab.url) {
+        const currentHostname = new URL(tab.url).hostname.toLowerCase().replace(/^www\./, "");
+        const isFromMonitored = settings.monitoredSites.some(site => matchesSite(currentHostname, site));
+        if (isFromMonitored) {
+          // User is actively browsing a monitored site, allow outbound navigation
+          return;
+        }
+      }
+    } catch {
+      // If we can't get the tab info, proceed with normal behavior
+    }
+
     if (Math.random() < settings.redirectProbability) {
       const urls = settings.destinationUrls;
       const destination = urls[Math.floor(Math.random() * urls.length)];
