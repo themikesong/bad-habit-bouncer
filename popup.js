@@ -2,7 +2,8 @@ const DEFAULTS = {
   enabled: true,
   redirectProbability: 0.1,
   monitoredSites: ["reddit.com"],
-  destinationUrls: ["https://www.substack.com"]
+  destinationUrls: ["https://www.substack.com"],
+  allowInSessionNavigation: true
 };
 
 const enabledEl = document.getElementById("enabled");
@@ -16,6 +17,7 @@ const newUrlEl = document.getElementById("new-url");
 const addUrlBtn = document.getElementById("add-url");
 const statusLabel = document.getElementById("status-label");
 const container = document.getElementById("container");
+const allowInSessionEl = document.getElementById("allow-in-session");
 
 function normalizeHostname(input) {
   input = input.trim().toLowerCase();
@@ -49,6 +51,7 @@ function updateUI(settings) {
   enabledEl.checked = settings.enabled;
   probabilityEl.value = Math.round(settings.redirectProbability * 100);
   probabilityValueEl.textContent = Math.round(settings.redirectProbability * 100) + "%";
+  allowInSessionEl.checked = settings.allowInSessionNavigation;
 
   renderList(siteListEl, settings.monitoredSites, (i) => {
     const updated = settings.monitoredSites.filter((_, j) => j !== i);
@@ -112,6 +115,10 @@ function addUrl() {
     newUrlEl.value = "";
   });
 }
+
+allowInSessionEl.addEventListener("change", () => {
+  chrome.storage.sync.set({ allowInSessionNavigation: allowInSessionEl.checked });
+});
 
 addSiteBtn.addEventListener("click", addSite);
 newSiteEl.addEventListener("keydown", e => { if (e.key === "Enter") addSite(); });

@@ -2,7 +2,8 @@ const DEFAULTS = {
   enabled: true,
   redirectProbability: 0.1,
   monitoredSites: ["reddit.com"],
-  destinationUrls: ["https://www.substack.com"]
+  destinationUrls: ["https://www.substack.com"],
+  allowInSessionNavigation: true
 };
 
 function isSearchUrl(url) {
@@ -45,8 +46,24 @@ chrome.webNavigation.onBeforeNavigate.addListener(
       return;
     }
 
-    const isMonitored = settings.monitoredSites.some(site => matchesSite(hostname, site));
-    if (!isMonitored) return;
+    const matchedSite = settings.monitoredSites.find(site => matchesSite(hostname, site));
+    if (!matchedSite) return;
+
+    // Check if we're already on a distraction site (in-session navigation)
+    if (settings.allowInSessionNavigation) {
+      try {
+        const tab = await chrome.tabs.get(details.tabId);
+        if (tab.url) {
+          const currentHostname = new URL(tab.url).hostname.toLowerCase().replace(/^www\./, "");
+          // If already on the same distraction site, allow navigation
+          if (matchesSite(currentHostname, matchedSite)) {
+            return;
+          }
+        }
+      } catch (e) {
+        // Tab may not exist or URL may be invalid; proceed with bounce logic
+      }
+    }
 
     if (Math.random() < settings.redirectProbability) {
       const urls = settings.destinationUrls;
