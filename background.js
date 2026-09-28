@@ -26,7 +26,7 @@ function matchesSite(hostname, site) {
   return hostname === site || hostname.endsWith("." + site);
 }
 
-chrome.webNavigation.onBeforeNavigate.addListener(
+chrome.webNavigation.onCommitted.addListener(
   async (details) => {
     // Only act on top-level navigation
     if (details.frameId !== 0) return;
@@ -49,14 +49,17 @@ chrome.webNavigation.onBeforeNavigate.addListener(
     const matchedSite = settings.monitoredSites.find(site => matchesSite(hostname, site));
     if (!matchedSite) return;
 
-    // Check if we're already on a distraction site (in-session navigation)
+    // Check if this is in-session navigation (link click or form submit from same site)
     if (settings.allowInSessionNavigation) {
       try {
         const tab = await chrome.tabs.get(details.tabId);
         if (tab.url) {
           const currentHostname = new URL(tab.url).hostname.toLowerCase().replace(/^www\./, "");
-          // If already on the same distraction site, allow navigation
-          if (matchesSite(currentHostname, matchedSite)) {
+          // Only allow in-session navigation for link clicks and form submissions
+          // Address bar (typed), bookmarks, reloads, etc. should still bounce
+          const allowedTransitions = ["link", "form_submit"];
+          if (matchesSite(currentHostname, matchedSite) && 
+              allowedTransitions.includes(details.transitionType)) {
             return;
           }
         }
