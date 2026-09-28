@@ -6,6 +6,9 @@ const DEFAULTS = {
   allowInSessionNavigation: true
 };
 
+// Track the last committed hostname for each tab to detect in-session navigation
+const tabLastHostname = new Map();
+
 function isSearchUrl(url) {
   return /[?&]q=/.test(url);
 }
@@ -26,6 +29,11 @@ function matchesSite(hostname, site) {
   return hostname === site || hostname.endsWith("." + site);
 }
 
+// Clean up tab state when tabs are closed
+chrome.tabs.onRemoved.addListener((tabId) => {
+  tabLastHostname.delete(tabId);
+});
+
 chrome.webNavigation.onCommitted.addListener(
   async (details) => {
     // Only act on top-level navigation
@@ -33,11 +41,29 @@ chrome.webNavigation.onCommitted.addListener(
 
     const url = details.url;
 
-    if (isSearchUrl(url)) return;
+    if (isSearchUrl(url)) {
+      // Update tab state even for search URLs (they're allowed through)
+      try {
+        const hostname = new URL(url).hostname.toLowerCase().replace(/^www\./, "");
+        tabLastHostname.set(details.tabId, hostname);
+      } catch (e) {
+        // Invalid URL, ignore
+      }
+      return;
+    }
 
     const settings = await chrome.storage.sync.get(DEFAULTS);
 
-    if (!settings.enabled) return;
+    if (!settings.enabled) {
+      // Update tab state even when disabled
+      try {
+        const hostname = new URL(url).hostname.toLowerCase().replace(/^www\./, "");
+        tabLastHostname.set(details.tabId, hostname);
+      } catch (e) {
+        // Invalid URL, ignore
+      }
+      return;
+    }
 
     let hostname;
     try {
@@ -47,31 +73,41 @@ chrome.webNavigation.onCommitted.addListener(
     }
 
     const matchedSite = settings.monitoredSites.find(site => matchesSite(hostname, site));
-    if (!matchedSite) return;
+    if (!matchedSite) {
+      // Not a monitored site, update state and allow
+      tabLastHostname.set(details.tabId, hostname);
+      return;
+    }
 
-    // Check if this is in-session navigation (link click or form submit from same site)
+    // Check if this is in-session navigation (link click or form submit from same distraction site)
+    let shouldBounce = true;
     if (settings.allowInSessionNavigation) {
-      try {
-        const tab = await chrome.tabs.get(details.tabId);
-        if (tab.url) {
-          const currentHostname = new URL(tab.url).hostname.toLowerCase().replace(/^www\./, "");
-          // Only allow in-session navigation for link clicks and form submissions
-          // Address bar (typed), bookmarks, reloads, etc. should still bounce
-          const allowedTransitions = ["link", "form_submit"];
-          if (matchesSite(currentHostname, matchedSite) && 
-              allowedTransitions.includes(details.transitionType)) {
-            return;
-          }
-        }
-      } catch (e) {
-        // Tab may not exist or URL may be invalid; proceed with bounce logic
+      const previousHostname = tabLastHostname.get(details.tabId);
+      // Only allow in-session navigation for link clicks and form submissions
+      // when the PREVIOUS page was also on the same distraction site
+      const allowedTransitions = ["link", "form_submit"];
+      if (previousHostname && 
+          matchesSite(previousHostname, matchedSite) && 
+          allowedTransitions.includes(details.transitionType)) {
+        shouldBounce = false;
       }
     }
 
-    if (Math.random() < settings.redirectProbability) {
+    if (shouldBounce && Math.random() < settings.redirectProbability) {
       const urls = settings.destinationUrls;
       const destination = urls[Math.floor(Math.random() * urls.length)];
       chrome.tabs.update(details.tabId, { url: destination });
+      // Update tab state to reflect the redirect destination
+      try {
+        const redirectHostname = new URL(destination).hostname.toLowerCase().replace(/^www\./, "");
+        tabLastHostname.set(details.tabId, redirectHostname);
+      } catch (e) {
+        // Invalid redirect URL, just clear the state
+        tabLastHostname.delete(details.tabId);
+      }
+    } else {
+      // Either not bouncing or dice roll failed - update state to current page
+      tabLastHostname.set(details.tabId, hostname);
     }
   },
   { url: [{ schemes: ["http", "https"] }] }
